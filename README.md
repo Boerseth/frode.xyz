@@ -1,8 +1,6 @@
----
-title: README
-...
+# README
 
-The script `pd.sh` generates the entire site from
+The script `pd` generates the entire site from
 - The directory `mark/`, assumed to contain
 
 ```
