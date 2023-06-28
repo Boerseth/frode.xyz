@@ -40,9 +40,6 @@ $${body}
 </section>
 endef
 
-define TEMPLATE_MAIN
-endef
-
 define TEMPLATE_STYLE_CSS
 html {
 	max-width: 70ch;
@@ -115,7 +112,7 @@ $(SECTION_FILES): .sections/%.html: source/%.md .templates/section.html | .secti
 	@if ! head "$<" -n 4 | grep "^title: \".*\"$$" > /dev/null; then exit 1; fi
 	@if ! head "$<" -n 4 | grep "^summary: \".*\"$$" > /dev/null; then exit 1; fi
 	@if ! head "$<" -n 5 | grep "^...$$" > /dev/null; then exit 1; fi
-	@pandoc --mathml --template ".templates/section.html" -o $@ -i $<
+	@pandoc --mathml -f markdown+raw_html -t html5 --template ".templates/section.html" -o $@ -i $<
 
 # Sort filenames chronologically, after they`ve all been verified
 .templates/sorted-filenames: $(SECTION_FILES) | .templates
@@ -147,7 +144,7 @@ build/styles.css: source/styles.css | build
 # Build index.html
 build/index.html: build/styles.css .sections/toc.html .templates/sorted-filenames | build
 	@echo "- $@"
-	@pandoc -s --mathml  -f html -t html -M title="$(TITLE)" --css "/styles.css" \
+	@pandoc -s --mathml  -f html+raw_html -t html5 -M title="$(TITLE)" --css "/styles.css" \
 		--shift-heading-level-by=1 \
 		$$(sed -e 's|^|.sections/|' -e 's|$$|.html|' .templates/sorted-filenames) \
 		.sections/toc.html \
