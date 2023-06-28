@@ -40,32 +40,35 @@ The use of such a simple generator to get the neighbours of a cell, along with t
 
 ## The Glider
 
-<img
-    width="320"
-    height="320"
-    src="2020-09-08/glider.mp4">
-</img>
+<video width="320" height="320" preload="none" controls>
+    <source
+        src="2020-09-08/glider.mp4"
+        type="video/mp4"
+    >
+</video>
 
 *The Glider* is one of the two most famous patterns. It looks simple enough, yet surprisingly, as it evolves, it recreates itself a few cells over from where it started. It continues gliding through its world forever.
 
 
 ## The Pi-heptamino
 
-<img
-    width="320"
-    height="320"
-    src="2020-09-08/pi.mp4">
-</img>
+<video width="320" height="320" preload="none" controls>
+    <source
+        src="2020-09-08/pi.mp4"
+        type="video/mp4"
+    >
+</video>
 
 *The Pi-heptamino* (so named for its shape and the fact that it consists of seven (hepta) cells) is a so-called "methusela", because it takes many generations for its evolution to reach a stable pattern. It creates a beautiful symmetrical dance of cells as it evolves, and might just be my favourite.
 
 
 ## The R-pentamino
 
-<img
-    width="320"
-    height="320"
-    src="2020-09-08/r_pent.mp4">
-</img>
+<video width="320" height="320" preload="none" controls>
+    <source
+        src="2020-09-08/r_pent.mp4"
+        type="video/mp4"
+    >
+</video>
 
 *The R-pentamino* (again named for its shape and number of cells) is the other most famous shape. From only five starting cells, this pattern manages to keep evolving for 1103 generations before reaching stability. A shockingly long-lived methusela.
