@@ -275,7 +275,7 @@ ${if(images)}
 ${for(images)}
 <div class="image">
 <a class="thumbnail" href="#${images.name}"><img src="${images.path}" /></a>
-<a class="view" href="#" id="${images.name}"><img src="${images.path}" /></a>
+<a class="view" href="#deselect" id="${images.name}"><img src="${images.path}" /></a>
 </div>
 ${endfor}
 </div>
@@ -283,7 +283,7 @@ ${endif}
 
 ${if(posts)}
 ${for(posts)}
-<h1><a href="${posts.path}">${posts.header}</a></h1>
+<h1 id="${posts.date}"><a href="${posts.path}">${posts.header}</a></h1>
 <div class="date">${posts.date}</div>
 <div class="summary">${posts.summary}</div>
 ${endfor}
@@ -293,8 +293,9 @@ ${if(header)}
 <h1><a href="">${header}</a></h1>
 ${if(date)}<div class="date">${date}</div>${endif}
 ${if(summary)}<div class="summary">${summary}</div>${endif}
-${endif}
-
 ${body}
+${else}
+${body}
+${endif}
 </body>
 </html>
