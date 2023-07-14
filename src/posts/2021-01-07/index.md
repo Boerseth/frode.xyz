@@ -1,6 +1,6 @@
 ---
 date: "2021-01-07"
-title: "Deleting facebook"
+header: "Deleting facebook"
 summary: "Today at around 23:55 I deleted my facebook account. Earlier in the day, I made a post to inform all my contacts of this decision, written in Norwegian. Here it is in full:"
 ...
 

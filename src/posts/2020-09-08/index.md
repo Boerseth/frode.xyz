@@ -1,6 +1,6 @@
 ---
 date: "2020-09-08"
-title: "Conway's Game of Life"
+header: "Conway's Game of Life"
 summary: "My first blogpost, including small video-clips which I also posted on instagram."
 ...
 
@@ -42,7 +42,7 @@ The use of such a simple generator to get the neighbours of a cell, along with t
 
 <video width="320" height="320" preload="none" controls>
     <source
-        src="2020-09-08/glider.mp4"
+        src="/posts/2020-09-08/glider.mp4"
         type="video/mp4"
     >
 </video>
@@ -54,7 +54,7 @@ The use of such a simple generator to get the neighbours of a cell, along with t
 
 <video width="320" height="320" preload="none" controls>
     <source
-        src="2020-09-08/pi.mp4"
+        src="/posts/2020-09-08/pi.mp4"
         type="video/mp4"
     >
 </video>
@@ -66,7 +66,7 @@ The use of such a simple generator to get the neighbours of a cell, along with t
 
 <video width="320" height="320" preload="none" controls>
     <source
-        src="2020-09-08/r_pent.mp4"
+        src="/posts/2020-09-08/r_pent.mp4"
         type="video/mp4"
     >
 </video>

@@ -1,8 +1,10 @@
 ---
 date: ""
-title: "About"
+header: ""
 summary: ""
 ...
+
+My name is <strong>Frode Thorsen Børseth</strong>.
 
 I am a <strong>software developer</strong> with a <strong>master's in physics</strong>. Originally from <strong>Haugesund</strong> on the west-coast of <strong>Norway</strong>, I am today located further north in beautiful <strong>Trondheim</strong>, whither I moved many summers ago to attend <strong>NTNU</strong> (the Norwegian University of Science and Technology). Apart from a year abroad and vacations back home, this is where I have spent most of my adult life.
 
