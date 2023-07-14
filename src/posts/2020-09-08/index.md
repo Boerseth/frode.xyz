@@ -2,7 +2,7 @@
 date: "2020-09-08"
 header: "Conway's Game of Life"
 summary: "My first blogpost, including small video-clips which I also posted on instagram."
-...
+---
 
 
 Conway's Game of Life takes place in an infinite square grid of cells that can be either dead or live (white or black in the animations below). From generation to generation, cells either survive/come to life or die/remain dead depending on how many of their neighbours were alive:
@@ -34,7 +34,7 @@ def get_next(board: Set[Tuple[int, int]]) -> Set[Tuple[int, int]]:
     candidates = board | {neighbour for cell in board for neighbour in neighbours(cell)}
     return {cell for cell in candidates if will_be_alive(cell)}
 ```
-    
+
 The use of such a simple generator to get the neighbours of a cell, along with that last line in `get_next`, are what particularly tickle me.
 
 

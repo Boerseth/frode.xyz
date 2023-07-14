@@ -2,7 +2,7 @@
 date: "2020-08-30"
 header: "This is a test"
 summary: "I made this to test out the different capabilities of Pandoc, for my old blog when it was located at boerseth.com instead of here. Some of the information here no longer applies. For instance, I now let pandoc use mathml to render math, instead of KaTeX."
-...
+---
 
 If this post, being my first ever, seems like it is just a patchwork of disconnected pieces of text and visual elements, I can happily state that it has served its purpose. I had a handful of goals for what this website should be capable of presenting, and have used this document to test them all out. It is as good a first post as any I could have come up with deliberately.
 

@@ -2,7 +2,7 @@
 date: "2021-01-27"
 header: "Social fires"
 summary: "Society's social graph has been flipped on its head, like a dry forest woven thick with fuses connecting distant trees."
-...
+---
 
 Early November last year, I watched [a YouTube video](https://youtu.be/YVDLNFEuvEI) by Luke Smith (a somewhat controversial technology-YouTuber) in which he briefly discussed the recent election. While it should be quite clear that I don't agree with all of his world views or political leanings (in this video alone he coyly presents the idea of balkanising the US into ethnostates as one possible outcome from his suggestions), it just so happened to be this particular video that spurred me into typing out some ideas that by then I had been mulling over for some time. I also got a response that caused me to write yet another comment as a retort. This post consists of all three of these comments.
 

@@ -2,7 +2,7 @@
 date: "2021-01-07"
 header: "Deleting facebook"
 summary: "Today at around 23:55 I deleted my facebook account. Earlier in the day, I made a post to inform all my contacts of this decision, written in Norwegian. Here it is in full:"
-...
+---
 
 > *Om noen timer kommer jeg til å slette facebook-kontoen min.*
 
