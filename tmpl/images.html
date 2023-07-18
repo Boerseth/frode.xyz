@@ -1,0 +1,29 @@
+<style>
+    .gallery { display: grid; grid-template-columns: auto auto auto; }
+    .image { padding: 1em; }
+    .thumbnail img { width: 100%; height: 100%; }
+    .view {
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: rgba(0, 0, 0, 0.7);
+        transition: opacity 200ms;
+        visibility: hidden;
+        opacity: 0;
+    }
+    .view:target { visibility: visible; opacity: 1; }
+</style>
+
+<div class="gallery">
+${for(images)}
+<div class="image">
+<a class="thumbnail" href="#${it.date}"><img src="${it.path}" /></a>
+<a class="view" href="#deselect" id="${it.date}"><img src="${it.path}" /></a>
+</div>
+${endfor}
+</div>
