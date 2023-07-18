@@ -1,75 +1,79 @@
 TITLE = frode.xyz
-TEMP = template.html
-PANDOC = pandoc --template $(TEMP) --metadata title=$(TITLE) --mathml -f markdown+raw_html -t html5
-
-WORK_BASE = build meta
-WORK_SUB = images posts
-WORKSPACE = $(foreach base, $(WORK_BASE), $(foreach sub, $(WORK_SUB), $(base)/$(sub)))
-
-INDEX_SOURCE = src/index.md
-ABOUT_SOURCE = src/about/index.md
-POSTS_SOURCES = $(shell find src/posts -type f -name "*.md" | sort --reverse)
-MD_SOURCES = $(INDEX_SOURCE) $(ABOUT_SOURCE) $(POSTS_SOURCES)
-OTHER_SOURCES = $(shell find src/posts -type f -not -name "*.md")
-IMAGES_SOURCES = $(shell find src/images -mindepth 1 -type f | sort --reverse)
-
-POSTS_METADATA_FILES = $(POSTS_SOURCES:src/posts/%.md=meta/posts/%.yaml)
-IMAGES_METADATA_FILES = $(IMAGES_SOURCES:src/images/%=meta/images/%.yaml)
-
-HTML_TARGETS = $(MD_SOURCES:src/%.md=build/%.html)
-OTHER_TARGETS = $(OTHER_SOURCES:src/%=build/%)
-POSTS_TARGET = build/posts/index.html
-IMAGES_TARGET = build/images/index.html
+TEMPLATE = tmpl/index.html
+TEMPLATES = $(wildcard tmpl/*)
+PANDOC = pandoc -f markdown+raw_html -t html5 --template $(TEMPLATE) --data-dir=./tmpl --metadata title=$(TITLE) --mathml
 
 
-# DEFAULT
+default: all
 
-all: $(WORKSPACE) $(OTHER_TARGETS) $(HTML_TARGETS) $(IMAGES_TARGET) $(POSTS_TARGET)
 
+# TRIVIAL ===================
+
+WORKSPACE = build build/images build/posts meta meta/images meta/posts
 $(WORKSPACE):
 	@mkdir -p $@
 
+NON_MARKDOWN_SOURCES = $(shell find src -type f -not -name "*.md")
+NON_HTML_TARGETS = $(NON_MARKDOWN_SOURCES:src/%=build/%)
+$(NON_HTML_TARGETS): build/%: src/%
+	@echo $@
+	@mkdir -p $(@D)
+	@cp $< $@
+
+
+# METADATA ====================
+
+IMAGES_METADATA_FILES = $(patsubst src/images/%, meta/images/%.yaml, $(wildcard src/images/*))
+$(IMAGES_METADATA_FILES): meta/images/%.yaml: src/images/%
+	@echo $@
+	@mkdir -p $(@D)
+	@echo '- {"path": "/images/$*", "date": "$*"}' > $@
+
+POSTS_METADATA_FILES = $(patsubst src/posts/%index.md, meta/posts/%index.yaml, $(shell find src/posts -type f -name "*.md"))
+$(POSTS_METADATA_FILES): meta/posts/%index.yaml: src/posts/%index.md
+	@echo $@
+	@mkdir -p $(@D)
+	@yq e '.date and .pagetitle and .summary' --exit-status --front-matter extract $< > /dev/null
+	@yq e '[{"path": "/posts/$*"} * .]' --front-matter extract $< > $@
+
+meta/images/index.yaml: $(IMAGES_METADATA_FILES)
+	@cat $^ | yq eval '{"pagetitle": "images", "images": . | sort_by(.date) | reverse}' > $@
+
+meta/posts/index.yaml: $(POSTS_METADATA_FILES)
+	@cat $^ | yq eval '{"pagetitle": "posts", "posts": . | sort_by(.date) | reverse}' > $@
+
+meta/index.yaml: meta/images/index.yaml meta/posts/index.yaml
+	@echo $@
+	@yq ea 'select(fi==0) * select(fi==1) | .images = .images.[:3] | .posts = .posts.[:3] | .isroot = true' $^ > $@
+
+
+# HTML ======================
+
+ROOT_HTML_TARGET = build/index.html
+POSTS_HTML_TARGET = build/posts/index.html
+IMAGES_HTML_TARGET = build/images/index.html
+
+GENERATED_TARGETS = $(ROOT_HTML_TARGET) $(POSTS_HTML_TARGET) $(IMAGES_HTML_TARGET)
+$(GENERATED_TARGETS): build/%.html: meta/%.yaml $(TEMPLATES)
+	@echo $@
+	@echo "" | $(PANDOC) --metadata-file=$< -o $@
+
+HTML_TARGETS = $(patsubst src/%.md, build/%.html, $(shell find src -type f -name "*.md"))
+$(HTML_TARGETS): build/%.html: src/%.md $(TEMPLATE)
+	@echo $@
+	@mkdir -p $(@D)
+	@$(PANDOC) -i $< -o $@
+
+
+# DEV ===================
+
+.PHONY: all
+all: $(WORKSPACE) $(NON_HTML_TARGETS) $(HTML_TARGETS) $(GENERATED_TARGETS)
+
+.PHONY: serve
 serve: all
 	@cd build && python3 -m http.server 1234
 
 .PHONY: clean
-clean: $(WORK_BASE)
+clean: $(WORKSPACE)
 	@rm -rf $^
-
-
-# METADATA
-
-$(POSTS_METADATA_FILES): meta/%index.yaml: src/%index.md
-	@echo $@
-	@yq e '.date and .header and .summary' --exit-status --front-matter extract $< > /dev/null
-	@mkdir -p $(@D)
-	@yq e '[{"path": "/$*"} * .]' --front-matter extract $< > $@
-
-meta/posts.yaml: $(POSTS_METADATA_FILES)
-	@echo $@
-	@cat $^ | yq eval '{"posts": .}' > $@
-
-$(IMAGES_METADATA_FILES): meta/images/%.yaml: src/images/%
-	@echo $@
-	@echo "- {'name': '$*', 'path': '/images/$*'}" > $@
-
-meta/images.yaml: $(IMAGES_METADATA_FILES)
-	@echo $@
-	@cat $^ | yq eval '{"images": .}' > $@
-
-
-# BUILD
-
-$(POSTS_TARGET) $(IMAGES_TARGET): build/%/index.html: meta/%.yaml $(TEMP)
-	@echo $@
-	@echo "" | $(PANDOC) --metadata-file=$< > $@
-
-$(HTML_TARGETS): build/%.html: src/%.md $(TEMP)
-	@echo $@
-	@mkdir -p $(@D)
-	@$(PANDOC) -i $< > $@
-
-$(OTHER_TARGETS): build/%: src/%
-	@echo $@
-	@mkdir -p $(@D)
-	@cp $< $@
