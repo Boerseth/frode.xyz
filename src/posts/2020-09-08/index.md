@@ -1,6 +1,6 @@
 ---
 date: "2020-09-08"
-header: "Conway's Game of Life"
+pagetitle: "Conway's Game of Life"
 summary: "My first blogpost, including small video-clips which I also posted on instagram."
 ---
 

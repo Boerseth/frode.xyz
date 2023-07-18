@@ -1,6 +1,6 @@
 ---
 date: "2021-01-27"
-header: "Social fires"
+pagetitle: "Social fires"
 summary: "Society's social graph has been flipped on its head, like a dry forest woven thick with fuses connecting distant trees."
 ---
 

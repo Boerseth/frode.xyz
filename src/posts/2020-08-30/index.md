@@ -1,6 +1,6 @@
 ---
 date: "2020-08-30"
-header: "This is a test"
+pagetitle: "This is a test"
 summary: "I made this to test out the different capabilities of Pandoc, for my old blog when it was located at boerseth.com instead of here. Some of the information here no longer applies. For instance, I now let pandoc use mathml to render math, instead of KaTeX."
 ---
 
