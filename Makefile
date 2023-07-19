@@ -1,13 +1,9 @@
 TITLE = frode.xyz
-TEMPLATE = tmpl/index.html
-TEMPLATES = $(wildcard tmpl/*)
-PANDOC = pandoc -f markdown+raw_html -t html5 --template $(TEMPLATE) --data-dir=./tmpl --metadata title=$(TITLE) --mathml
 
-
+.PHONY: default
 default: all
 
-
-# TRIVIAL ===================
+# Trivial
 
 WORKSPACE = build build/images build/posts meta meta/images meta/posts
 $(WORKSPACE):
@@ -20,8 +16,7 @@ $(NON_HTML_TARGETS): build/%: src/%
 	@mkdir -p $(@D)
 	@cp $< $@
 
-
-# METADATA ====================
+# Metadata
 
 IMAGES_METADATA_FILES = $(patsubst src/images/%, meta/images/%.yaml, $(wildcard src/images/*))
 $(IMAGES_METADATA_FILES): meta/images/%.yaml: src/images/%
@@ -33,42 +28,40 @@ POSTS_METADATA_FILES = $(patsubst src/posts/%index.md, meta/posts/%index.yaml, $
 $(POSTS_METADATA_FILES): meta/posts/%index.yaml: src/posts/%index.md
 	@echo $@
 	@mkdir -p $(@D)
-	@yq e '.date and .pagetitle and .summary' --exit-status --front-matter extract $< > /dev/null
-	@yq e '[{"path": "/posts/$*"} * .]' --front-matter extract $< > $@
+	@yq -f=extract --exit-status e '.date and .pagetitle and .summary' $< > /dev/null
+	@yq -f=extract e '[{"path": "/posts/$*"} * .]' $< > $@
 
 meta/images/index.yaml: $(IMAGES_METADATA_FILES)
-	@cat $^ | yq eval '{"pagetitle": "images", "images": . | sort_by(.date) | reverse}' > $@
+	@echo $@
+	@cat $^ | yq e '{"pagetitle": "images", "images": . | sort_by(.date) | reverse}' > $@
 
 meta/posts/index.yaml: $(POSTS_METADATA_FILES)
-	@cat $^ | yq eval '{"pagetitle": "posts", "posts": . | sort_by(.date) | reverse}' > $@
+	@echo $@
+	@cat $^ | yq e '{"pagetitle": "posts", "posts": . | sort_by(.date) | reverse}' > $@
 
 meta/index.yaml: meta/images/index.yaml meta/posts/index.yaml
 	@echo $@
 	@yq ea 'select(fi==0) * select(fi==1) | .images = .images.[:3] | .posts = .posts.[:3] | .isroot = true' $^ > $@
 
+# HTML
 
-# HTML ======================
+PANDOC = pandoc -f markdown+raw_html -t html5 --template tmpl/index.html --data-dir=./tmpl --metadata title=$(TITLE) --mathml
 
-ROOT_HTML_TARGET = build/index.html
-POSTS_HTML_TARGET = build/posts/index.html
-IMAGES_HTML_TARGET = build/images/index.html
-
-GENERATED_TARGETS = $(ROOT_HTML_TARGET) $(POSTS_HTML_TARGET) $(IMAGES_HTML_TARGET)
-$(GENERATED_TARGETS): build/%.html: meta/%.yaml $(TEMPLATES)
+GENERATED_TARGETS = build/index.html build/posts/index.html build/images/index.html
+$(GENERATED_TARGETS): build/%.html: meta/%.yaml tmpl/*
 	@echo $@
 	@echo "" | $(PANDOC) --metadata-file=$< -o $@
 
-HTML_TARGETS = $(patsubst src/%.md, build/%.html, $(shell find src -type f -name "*.md"))
-$(HTML_TARGETS): build/%.html: src/%.md $(TEMPLATE)
+TRANSLATED_TARGETS = $(patsubst src/%.md, build/%.html, $(shell find src -type f -name "*.md"))
+$(TRANSLATED_TARGETS): build/%.html: src/%.md tmpl/index.html
 	@echo $@
 	@mkdir -p $(@D)
 	@$(PANDOC) -i $< -o $@
 
-
-# DEV ===================
+# Development
 
 .PHONY: all
-all: $(WORKSPACE) $(NON_HTML_TARGETS) $(HTML_TARGETS) $(GENERATED_TARGETS)
+all: $(WORKSPACE) $(NON_HTML_TARGETS) $(TRANSLATED_TARGETS) $(GENERATED_TARGETS)
 
 .PHONY: serve
 serve: all
