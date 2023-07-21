@@ -1,16 +1,12 @@
 TITLE = frode.xyz
+WORKSPACE = build meta
 
 .PHONY: default
 default: all
 
 # Trivial
 
-WORKSPACE = build build/images build/posts meta meta/images meta/posts
-$(WORKSPACE):
-	@mkdir -p $@
-
-NON_MARKDOWN_SOURCES = $(shell find src -type f -not -name "*.md")
-NON_HTML_TARGETS = $(NON_MARKDOWN_SOURCES:src/%=build/%)
+NON_HTML_TARGETS = $(patsubst src/%, build/%, $(shell find src -type f -not -name "*.md"))
 $(NON_HTML_TARGETS): build/%: src/%
 	@echo $@
 	@mkdir -p $(@D)
@@ -27,8 +23,8 @@ $(IMAGES_METADATA_FILES): meta/images/%.yaml: src/images/%
 POSTS_METADATA_FILES = $(patsubst src/posts/%index.md, meta/posts/%index.yaml, $(shell find src/posts -type f -name "*.md"))
 $(POSTS_METADATA_FILES): meta/posts/%index.yaml: src/posts/%index.md
 	@echo $@
-	@mkdir -p $(@D)
 	@yq -f=extract --exit-status e '.date and .pagetitle and .summary' $< > /dev/null
+	@mkdir -p $(@D)
 	@yq -f=extract e '[{"path": "/posts/$*"} * .]' $< > $@
 
 meta/images/index.yaml: $(IMAGES_METADATA_FILES)
@@ -50,10 +46,12 @@ PANDOC = pandoc -f markdown+raw_html -t html5 --template tmpl/index.html --data-
 GENERATED_TARGETS = build/index.html build/posts/index.html build/images/index.html
 $(GENERATED_TARGETS): build/%.html: meta/%.yaml tmpl/*
 	@echo $@
+	@mkdir -p $(@D)
 	@echo "" | $(PANDOC) --metadata-file=$< -o $@
 
-TRANSLATED_TARGETS = $(patsubst src/%.md, build/%.html, $(shell find src -type f -name "*.md"))
-$(TRANSLATED_TARGETS): build/%.html: src/%.md tmpl/index.html
+POSTS_TARGETS = $(patsubst src/%.md, build/%.html, $(shell find src/posts -type f -name "index.md"))
+TRANSLATED_TARGETS = build/about/index.html $(POSTS_TARGETS)
+$(TRANSLATED_TARGETS): build/%/index.html: src/%/index.md tmpl/index.html
 	@echo $@
 	@mkdir -p $(@D)
 	@$(PANDOC) -i $< -o $@
@@ -61,7 +59,7 @@ $(TRANSLATED_TARGETS): build/%.html: src/%.md tmpl/index.html
 # Development
 
 .PHONY: all
-all: $(WORKSPACE) $(NON_HTML_TARGETS) $(TRANSLATED_TARGETS) $(GENERATED_TARGETS)
+all: $(NON_HTML_TARGETS) $(TRANSLATED_TARGETS) $(GENERATED_TARGETS)
 
 .PHONY: serve
 serve: all
