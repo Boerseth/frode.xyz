@@ -61,10 +61,19 @@ serve: all
 clean: $(WORKSPACE)
 	@rm -rf $^
 
-# The below does not remove folders...
-ORPHAN_METADATA = $(filter-out $(METADATA), $(shell find meta -mindepth 3 -type f))
-ORPHAN_TARGETS = $(filter-out $(TARGETS), $(shell find build -type f))
 .PHONY: prune
-prune: $(ORPHAN_METADATA) $(ORPHAN_TARGETS)
+prune: prune_folders prune_files
+
+TARGET_FOLDERS = $(patsubst src%, build% meta%, $(shell find src -type d))
+ORPHAN_FOLDERS = $(filter-out $(TARGET_FOLDERS), $(shell find build meta -type d))
+.PHONY: prune_folders
+prune_folders: $(ORPHAN_FOLDERS)
 	@echo "Pruning " $^
 	@rm -rf $^
+
+ORPHAN_METADATA = $(filter-out $(METADATA), $(shell find meta -type f -mindepth 3))
+ORPHAN_TARGETS = $(filter-out $(TARGETS), $(shell find build -type f))
+.PHONY: prune_files
+prune_files: $(ORPHAN_METADATA) $(ORPHAN_TARGETS)
+	@echo "Pruning " $^
+	@rm $^
