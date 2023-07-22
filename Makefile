@@ -60,3 +60,11 @@ serve: all
 .PHONY: clean
 clean: $(WORKSPACE)
 	@rm -rf $^
+
+# The below does not remove folders...
+ORPHAN_METADATA = $(filter-out $(METADATA), $(shell find meta -mindepth 3 -type f))
+ORPHAN_TARGETS = $(filter-out $(TARGETS), $(shell find build -type f))
+.PHONY: prune
+prune: $(ORPHAN_METADATA) $(ORPHAN_TARGETS)
+	@echo "Pruning " $^
+	@rm -rf $^
