@@ -71,7 +71,7 @@ prune_folders: $(ORPHAN_FOLDERS)
 	@echo "Pruning " $^
 	@rm -rf $^
 
-ORPHAN_METADATA = $(filter-out $(METADATA), $(shell find meta -type f -mindepth 3))
+ORPHAN_METADATA = $(filter-out $(METADATA), $(shell find meta -mindepth 3 -type f))
 ORPHAN_TARGETS = $(filter-out $(TARGETS), $(shell find build -type f))
 .PHONY: prune_files
 prune_files: $(ORPHAN_METADATA) $(ORPHAN_TARGETS)
