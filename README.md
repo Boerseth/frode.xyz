@@ -2,7 +2,7 @@
 
 Contains the source files for my blog, hosted at [frode.xyz](https://frode.xyz). The source files are in `src`, and the templates in `tmpl`.
 
-## Prerequisits
+## Prerequisites
 
 - I generate it using `make`, so most of the logic is in the `Makefile`.
 - Files are generated using `pandoc`.
