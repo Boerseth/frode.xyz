@@ -53,6 +53,13 @@ TARGETS = $(NON_HTML_TARGETS) $(TRANSLATED_TARGETS) $(GENERATED_TARGETS)
 .PHONY: all
 all: $(TARGETS)
 
+DATE := $(shell date -u +%Y-%m-%d)
+.PHONY: new-image new-post
+new-image new-post: new-%:
+	@mkdir -p src/$*s/$(DATE)
+	@yq e '.date = "$(DATE)"' tmpl/$*.yaml > src/$*s/$(DATE)/index.md
+	@echo "Initiated $* at  src/$*s/$(DATE)"
+
 .PHONY: serve
 serve: all
 	@cd build && python3 -m http.server 1234
