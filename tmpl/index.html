@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>${title}${if(pagetitle)} - ${pagetitle}${endif}</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+
+<header id="title-block-header">
+<h1 class="title" id="${title}"><a href="/">${title}</a></h1>
+<p>
+    <a href="/posts">posts</a>
+    <a href="/images">images</a>
+    <a href="/about">about</a>
+</p>
+</header>
+
+${if(isroot)}
+${root()}
+${else}
+${  if(images)}
+${    images()}
+${  else}
+${    if(posts)}
+${      posts()}
+${    else}
+
+<h2>${pagetitle}</h2>
+${if(date)}<div class="date">${date}</div>${endif}
+${if(summary)}<div class="summary">${summary}</div>${endif}
+
+${body}
+${    endif}
+${  endif}
+${endif}
+</body>
+
+<footer style="padding-top: 3em;">
+    <p>&copy;${title} All rights reserved.</p>
+</footer>
+</html>

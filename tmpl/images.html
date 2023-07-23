@@ -1,0 +1,8 @@
+<div class="gallery">
+${for(images)}
+<div class="image">
+<a class="thumbnail" href="#${it.date}"><img src="${it.path}/${it.file}" /></a>
+<a class="view" href="#deselect" id="${it.date}"><img src="${it.path}/${it.file}" /></a>
+</div>
+${endfor}
+</div>

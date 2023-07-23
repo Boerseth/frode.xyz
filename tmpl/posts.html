@@ -1,0 +1,5 @@
+${for(posts)}
+<h2 id="${it.date}"><a href="${it.path}">${it.pagetitle}</a></h2>
+<div class="date">${it.date}</div>
+<div class="summary">${it.summary}</div>
+${endfor}
